@@ -1,5 +1,5 @@
 import 'package:helpnow_assignment/models/form.dart';
-import 'package:helpnow_assignment/repositories/repository.dart';
+import 'package:helpnow_assignment/database/repository.dart';
 
 class FormService {
   Repository _repository;

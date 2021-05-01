@@ -1,4 +1,4 @@
-import 'package:helpnow_assignment/repositories/database_connection.dart';
+import 'package:helpnow_assignment/database/database_connection.dart';
 import 'package:sqflite/sqflite.dart';
 
 class Repository {
