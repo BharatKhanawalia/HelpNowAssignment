@@ -7,6 +7,8 @@ class FormData {
   String amountType;
   DateTime date;
   String printDate;
+  // String image;
+
   formMap() {
     var mapping = Map<String, dynamic>();
     mapping['id'] = id;
@@ -16,6 +18,7 @@ class FormData {
     mapping['amount'] = amount;
     mapping['amountType'] = amountType;
     mapping['date'] = '${date.day}/${date.month}/${date.year}';
+    // mapping['image'] = image;
     return mapping;
   }
 }

@@ -1,3 +1,4 @@
+// import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -10,6 +11,8 @@ import 'package:helpnow_assignment/widgets/rounded_button.dart';
 import 'package:helpnow_assignment/widgets/rounded_input_field.dart';
 import 'package:helpnow_assignment/widgets/text_field_container.dart';
 import 'package:image_picker/image_picker.dart';
+// import 'package:path_provider/path_provider.dart';
+// import 'package:permission_handler/permission_handler.dart';
 
 class FormScreen extends StatefulWidget {
   @override
@@ -21,7 +24,9 @@ class _FormScreenState extends State<FormScreen> {
 
   final _nameFocusNode = FocusNode();
   final _mobileFocusNode = FocusNode();
+  final _productTypeFocusNode = FocusNode();
   final _amountFocusNode = FocusNode();
+  final _amountTypeFocusNode = FocusNode();
 
   DateTime pickedDate;
 
@@ -34,6 +39,7 @@ class _FormScreenState extends State<FormScreen> {
   final picker = ImagePicker();
   @override
   void initState() {
+    // _requestPermission(Permission.storage);
     pickedDate = DateTime.now();
     _formData.date = pickedDate;
     super.initState();
@@ -44,6 +50,8 @@ class _FormScreenState extends State<FormScreen> {
     _nameFocusNode.dispose();
     _mobileFocusNode.dispose();
     _amountFocusNode.dispose();
+    _productTypeFocusNode.dispose();
+    _amountTypeFocusNode.dispose();
     super.dispose();
   }
 
@@ -55,6 +63,8 @@ class _FormScreenState extends State<FormScreen> {
     _formKey.currentState.save();
     var result = await _formService.saveForm(_formData);
     print(result);
+    // saveVideo();
+    // if (_imageFile != null) convertImage();
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => HomeScreen()),
@@ -136,6 +146,75 @@ class _FormScreenState extends State<FormScreen> {
     Navigator.of(context).pop();
   }
 
+  // void convertImage() {
+  //   File _image = File(_imageFile.path);
+  //   List<int> imageBytes = _image.readAsBytesSync();
+  //   print(imageBytes);
+  //   String base64Image = base64Encode(imageBytes);
+  //   setState(() {
+  //     _formData.image = base64Image;
+  //   });
+  // }
+
+  // Future<bool> saveVideo(
+  //     // String url, String fileName
+  //     ) async {
+  //   Directory directory;
+  //   try {
+  //     if (await _requestPermission(Permission.storage)) {
+  //       directory = await getExternalStorageDirectory();
+  //       String newPath = "";
+  //       print(directory);
+  //       List<String> paths = directory.path.split("/");
+  //       for (int x = 1; x < paths.length; x++) {
+  //         String folder = paths[x];
+  //         if (folder != "Android") {
+  //           newPath += "/" + folder;
+  //         } else {
+  //           break;
+  //         }
+  //       }
+  //       newPath = newPath + "/HelpNow";
+  //       directory = Directory(newPath);
+  //     } else {
+  //       return false;
+  //     }
+
+  //     if (!await directory.exists()) {
+  //       await directory.create(recursive: true);
+  //     }
+  //     // if (await directory.exists()) {
+  //     //   File saveFile = File(directory.path + "/$fileName");
+  //     //   await dio.download(url, saveFile.path,
+  //     //       onReceiveProgress: (value1, value2) {
+  //     //     setState(() {
+  //     //       progress = value1 / value2;
+  //     //     });
+  //     //   });
+  //     //   if (Platform.isIOS) {
+  //     //     await ImageGallerySaver.saveFile(saveFile.path,
+  //     //         isReturnPathOfIOS: true);
+  //     //   }
+  //     //   return true;
+  //     // }
+  //   } catch (e) {
+  //     print(e);
+  //   }
+  //   return false;
+  // }
+
+  // Future<bool> _requestPermission(Permission permission) async {
+  //   if (await permission.isGranted) {
+  //     return true;
+  //   } else {
+  //     var result = await permission.request();
+  //     if (result == PermissionStatus.granted) {
+  //       return true;
+  //     }
+  //   }
+  //   return false;
+  // }
+
   @override
   Widget build(BuildContext context) {
     final mediaWidth = MediaQuery.of(context).size.width;
@@ -188,32 +267,40 @@ class _FormScreenState extends State<FormScreen> {
                           SizedBox(
                             height: 20,
                           ),
-                          Stack(
-                            children: [
-                              CircleAvatar(
-                                backgroundColor: kPrimaryColor,
-                                radius: 81,
-                                child: CircleAvatar(
-                                  radius: 80,
-                                  backgroundImage: _imageFile == null
-                                      ? AssetImage(
-                                          'assets/images/placeholder_dp.png')
-                                      : FileImage(File(_imageFile.path)),
+                          GestureDetector(
+                            onTap: () {
+                              showModalBottomSheet(
+                                context: context,
+                                builder: ((builder) => bottomSheet()),
+                              );
+                            },
+                            child: Stack(
+                              children: [
+                                CircleAvatar(
+                                  backgroundColor: kPrimaryColor,
+                                  radius: 81,
+                                  child: CircleAvatar(
+                                    radius: 80,
+                                    backgroundImage: _imageFile == null
+                                        ? AssetImage(
+                                            'assets/images/placeholder_dp.png')
+                                        : FileImage(File(_imageFile.path)),
+                                  ),
                                 ),
-                              ),
-                              Positioned(
-                                bottom: 20,
-                                right: 20,
-                                child: InkWell(
-                                    onTap: () {
-                                      showModalBottomSheet(
-                                        context: context,
-                                        builder: ((builder) => bottomSheet()),
-                                      );
-                                    },
-                                    child: Icon(Icons.camera_alt)),
-                              ),
-                            ],
+                                Positioned(
+                                  bottom: 20,
+                                  right: 20,
+                                  child: InkWell(
+                                      onTap: () {
+                                        showModalBottomSheet(
+                                          context: context,
+                                          builder: ((builder) => bottomSheet()),
+                                        );
+                                      },
+                                      child: Icon(Icons.camera_alt)),
+                                ),
+                              ],
+                            ),
                           ),
                           SizedBox(
                             height: 20,
@@ -254,7 +341,7 @@ class _FormScreenState extends State<FormScreen> {
                             ],
                             onFieldSubmitted: (_) {
                               FocusScope.of(context)
-                                  .requestFocus(_amountFocusNode);
+                                  .requestFocus(_productTypeFocusNode);
                             },
                             hintText: 'Mobile Number *',
                             validator: (value) {
@@ -290,6 +377,7 @@ class _FormScreenState extends State<FormScreen> {
                               icon: Icon(Icons.arrow_drop_down),
                               iconSize: 24,
                               elevation: 16,
+                              focusNode: _productTypeFocusNode,
                               hint: Text('Product Type *'),
                               isExpanded: true,
                               onChanged: (String value) {
@@ -325,6 +413,10 @@ class _FormScreenState extends State<FormScreen> {
                             prefix: Text('₹   '),
                             hintText: 'Amount *',
                             keyboardType: TextInputType.number,
+                            onFieldSubmitted: (_) {
+                              FocusScope.of(context)
+                                  .requestFocus(_amountTypeFocusNode);
+                            },
                             validator: (value) {
                               if (value.isEmpty) {
                                 return 'Amount is required.';

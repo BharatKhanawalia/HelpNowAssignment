@@ -6,7 +6,7 @@ import 'package:helpnow_assignment/models/form_service.dart';
 import 'package:helpnow_assignment/screens/form_screen.dart';
 
 class HomeScreen extends StatefulWidget {
-  @override
+  @override 
   _HomeScreenState createState() => _HomeScreenState();
 }
 
@@ -31,6 +31,7 @@ class _HomeScreenState extends State<HomeScreen>
         formModel.amount = form['amount'];
         formModel.amountType = form['amountType'];
         formModel.printDate = form['date'];
+        // formModel.image = form['image'];
         _formList.add(formModel);
       });
     });
@@ -130,12 +131,19 @@ class _HomeScreenState extends State<HomeScreen>
                 return Column(
                   children: [
                     ListTile(
-                      leading: CircleAvatar(),
+                      leading: CircleAvatar(
+                        backgroundImage:
+                            AssetImage('assets/images/placeholder_dp.png'),
+                      ),
                       title: Text(
                         '${_formList[index].name} - ${_formList[index].mobile}',
                         style: TextStyle(fontSize: 18),
                       ),
                       subtitle: Text(_formList[index].printDate),
+                      trailing: Text(
+                        '₹ ${_formList[index].amount}',
+                        style: TextStyle(fontSize: 18),
+                      ),
                     ),
                     Divider(),
                   ],
